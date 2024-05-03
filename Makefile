@@ -7,11 +7,11 @@ CC				:= cc
 CFLAGS			:= -Wall -Werror -Wextra -pedantic -O3
 
 # Libraries to be linked (if any)
-LIBS			:= -Llib/libft/ -lft
-LIBS			:= -lncurses
+LIBS			+= -Llib/libft/ -lft
+LIBS			+= -lncurses
 
 # Include directories
-INCLUDES		:= -Iinc/
+INCLUDES		:= -Iinc/ -Ilib/libft/
 
 # Target executable
 TARGET			:= 2048
@@ -20,7 +20,9 @@ TARGET			:= 2048
 SRC_DIR			:= src/
 
 # Source files
-SRC_FILES		+= main.c		# Main
+SRC_FILES		+= main.c			# Main
+SRC_FILES		+= game.c			# Game settings
+SRC_FILES		+= board/board.c	# Board related functions
 
 # Object files directory
 OBJ_DIR			:= obj/

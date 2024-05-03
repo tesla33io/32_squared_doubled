@@ -6,19 +6,26 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:17:17 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/03 21:17:24 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/03 22:52:34 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../inc/game.h"
+#include "../lib/libft/libft.h"
 
 #include <ncurses.h>
 
 int main()
 {	
-	initscr();			/* Start curses mode 		  */
-	printw("Hello World !!!");	/* Print Hello World		  */
-	refresh();			/* Print it on to the real screen */
-	getch();			/* Wait for user input */
-	endwin();			/* End curses mode		  */
-
-	return 0;
+	t_GameState		*game = initialize_game();
+	if (!game)
+		return (-1);
+	t_BoardState	*brd = initialize_board(4);
+	if (!brd)
+		return (-2);
+	wprintw(game->win, "HELLO WORDL!!!!\n!!!!!!!!!!!!");
+	wgetch(game->win);
+	destroy_board(brd);
+	destroy_game(game);
+	return (0);
 }
