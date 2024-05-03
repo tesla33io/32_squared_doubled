@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:17:17 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/03 22:52:34 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/04 00:00:50 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main()
 	t_BoardState	*brd = initialize_board(4);
 	if (!brd)
 		return (-2);
-	wprintw(game->win, "HELLO WORDL!!!!\n!!!!!!!!!!!!");
+	display_board(brd, game);
 	wgetch(game->win);
 	destroy_board(brd);
 	destroy_game(game);

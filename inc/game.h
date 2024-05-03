@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:28:41 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/03 22:47:54 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/03 23:59:04 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 # define ERR_INVALID_BOARD_SIZE "Error: invalid board size"
 # define ERR_MALLOC_FAIL "Error: memory allocation failed"
+# define ERR_UNDEF_BOARD_OR_GAME "Error: board or game is undefined"
 
 /* Board related stuff */
 
@@ -57,5 +58,7 @@ void			destroy_board(t_BoardState *brd);
 
 t_GameState		*initialize_game(void);
 void			destroy_game(t_GameState *game);
+
+void		display_board(t_BoardState *brd, t_GameState *game);
 
 #endif /* GAME_H */

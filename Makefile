@@ -23,6 +23,7 @@ SRC_DIR			:= src/
 SRC_FILES		+= main.c			# Main
 SRC_FILES		+= game.c			# Game settings
 SRC_FILES		+= board/board.c	# Board related functions
+SRC_FILES		+= board/display.c	# Board related functions
 
 # Object files directory
 OBJ_DIR			:= obj/
