@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 14:09:34 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 16:46:57 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/04 18:01:09 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
  * dir = 'r' || 'l'
  */
-void	merge(int *array, int size, int dir)
+void	merge(int *array, int size)
 {
 	int	merged_array[size];
 	int	last_num = -1;
@@ -28,16 +28,17 @@ void	merge(int *array, int size, int dir)
 	{
 		if (array[i] != 0)
 		{
-			if (last_num == array[i])
+			if (array[i] == last_num)
 			{
 				/**
 				 * If last num is the same as current number, so we can merge
 				 * two numbers. New number would be created
 				 */
-				merged_array[merged_count] = last_num * 2;
+				merged_array[merged_count] = array[i] * 2;
 				merged_count++;
+				array[i] = 0;
 			}
-			else if (count(array, size, array[i]) % 2 != 0)
+			else if (count(array, size, array[i]) < 2)
 			{
 				/**
 				 * If the occurences of the number is not even
@@ -56,8 +57,6 @@ void	merge(int *array, int size, int dir)
 			last_num_pos = i;
 		}
 	}
-	if (dir == 'r')
-		right_align(merged_array, size, merged_count);
 	for (int i = 0; i < size; i++)
 		array[i] = merged_array[i];
 }

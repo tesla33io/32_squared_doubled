@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:51:54 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 17:08:29 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/04 17:53:44 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ bool	is_mergeable(int *array, int size, int index)
 {
 	int	target_val = array[index];
 
+	if (index + 1 >= size)
+		return (false);
 	for (int i = index + 1; i < size && array[i] != target_val; i++)
 	{
 		if (array[i] != 0 && array[i] != target_val)
