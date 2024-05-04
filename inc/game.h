@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:28:41 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 17:36:37 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/04 18:12:11 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void			destroy_game(t_GameState *game);
 
 void			display_board(t_BoardState *brd, t_GameState *game);
 
+void			update_board(int **array, int size, int dir);
 void			merge(int *array, int size);
 
 /* Utils */
@@ -68,5 +69,6 @@ void			merge(int *array, int size);
 int				count(int *array, int size, int n);
 void			right_align(int *array, int size, int last);
 bool			is_mergeable(int *array, int size, int index);
+void			reverse_array(int *array, int size);
 
 #endif /* GAME_H */

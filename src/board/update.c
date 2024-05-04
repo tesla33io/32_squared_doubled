@@ -6,15 +6,38 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 14:09:34 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 18:01:09 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/04 19:59:01 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/game.h"
 
 /*
- * dir = 'r' || 'l'
+ * dir:
+ *  - r for right
+ *  - l for left
+ *  - u for up
+ *  - d for down
  */
+void	update_board(int **array, int size, int dir)
+{
+	for (int y = 0; y < size; y++)
+	{
+		if (dir == 'u' || dir == 'd')
+		{
+			// vertical move (tricky)
+			return ;
+		}
+		if (dir == 'r')
+			reverse_array(array[y], size);
+
+		merge(array[y], size);
+
+		if (dir == 'r')
+			reverse_array(array[y], size);
+	}
+}
+
 void	merge(int *array, int size)
 {
 	int	merged_array[size];

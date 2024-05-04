@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:51:54 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 17:53:44 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/04 18:09:14 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,15 @@ bool	is_mergeable(int *array, int size, int index)
 			return (false);
 	}
 	return (true);
+}
+
+void	reverse_array(int *array, int size)
+{
+	int	tmp;
+	for (int i = 0; i < (int) (size / 2); i++)
+	{
+		tmp = array[i];
+		array[i] = array[size - i - 1];
+		array[size - i - 1] = tmp;
+	}
 }
