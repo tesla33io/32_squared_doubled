@@ -20,10 +20,12 @@ TARGET			:= 2048
 SRC_DIR			:= src/
 
 # Source files
-SRC_FILES		+= main.c			# Main
-SRC_FILES		+= game.c			# Game settings
-SRC_FILES		+= board/board.c	# Board related functions
-SRC_FILES		+= board/display.c	# Board related functions
+SRC_FILES		+= main.c				# Main
+SRC_FILES		+= game.c				# Game settings
+SRC_FILES		+= board/board.c		# Board related functions
+SRC_FILES		+= board/display.c		# Board related functions
+SRC_FILES		+= board/update.c		# Board related functions
+SRC_FILES		+= utils/array_utils.c	# Utils for arrays
 
 # Object files directory
 OBJ_DIR			:= obj/
