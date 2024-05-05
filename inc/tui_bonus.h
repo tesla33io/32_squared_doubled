@@ -50,6 +50,7 @@ void	draw_grid(t_game *game, int y, int x, int width);
 void	grid(t_game *game);
 int		intlen(int value);
 int		draw_score(t_game *game, int start_y, int start_x);
+int	menu_init(t_game *game);
 /*
 Warning: terminal too small,
 please either resize your terminal,

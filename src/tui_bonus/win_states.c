@@ -27,7 +27,7 @@ int	loser_wnd(t_game *game)
 		if (ch == 10)
 		{
 			game->menu = true;
-			return (game_loop(28), 0);
+			return (game_loop(game), 0);
 		}
 		else if (ch == 27)
 		{
@@ -104,7 +104,7 @@ int	winer_wnd(t_game *game)
 int	menu_init(t_game *game)
 {
 	char *titel[4];
-	int ch, higlight, x_start, y_start, width, win_state, shift, w_x, w_y = 0;
+	int ch, higlight, x_start, y_start, width, win_state, shift = 0;
 
 	titel[0] = "Join the Numbers: Reach";
 	titel[1] = "Choose your grid size";
@@ -188,7 +188,7 @@ void	grid(t_game *game)
 
 	werase(game->main_w);
 	getmaxyx(game->main_w, game->y_max, game->x_max);
-	if (game->y_max < 20 || game->x_max < 42)
+	if (game->y_max < 24 || game->x_max < 54)
 	{
 		werase(game->main_w);
 		wprintw(game->main_w, "Warning: terminal too small, please either resize your terminal or press ESCAPE to quit");

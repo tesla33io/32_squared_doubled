@@ -77,7 +77,7 @@ void	setup_color_pairs(void)
 }
 
 
-int	init_colors(t_game *game)
+int	init_colors(void)
 {
 	if (has_colors() == FALSE)
 	{
@@ -464,7 +464,7 @@ int	main (void)
 
 	if (win_init(&game) != 0)
 		return (1);
-	if (init_colors(&game) != 0)
+	if (init_colors() != 0)
 		return (1);
 	game_loop(&game);
 	return (0);
