@@ -3,6 +3,8 @@
 #include <unistd.h>
 
 
+static int	read_best_score(void);
+static void	save_best_score(int best);
 
 int	g_sig = 0;
 
@@ -39,27 +41,27 @@ void	setup_color_pairs(void)
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 0, 249, 246, 242);
 	init_pair(CUSTOM_COLORS_START + 0, CUSTOM_COLORS_START + 0, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 1, 238, 28, 218);
+	init_color(CUSTOM_COLORS_START + 1, 255, 190, 99);
 	init_pair(CUSTOM_COLORS_START + 1, CUSTOM_COLORS_START + 1, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 2, 207, 224, 200);
+	init_color(CUSTOM_COLORS_START + 2, 245, 92, 37);
 	init_pair(CUSTOM_COLORS_START + 2, CUSTOM_COLORS_START + 2, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 3, 242, 177, 121);
+	init_color(CUSTOM_COLORS_START + 3, 115, 122, 255);
 	init_pair(CUSTOM_COLORS_START + 3, CUSTOM_COLORS_START + 3, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 4, 245, 149, 199);
+	init_color(CUSTOM_COLORS_START + 4, 145, 48, 209);
 	init_pair(CUSTOM_COLORS_START + 4, CUSTOM_COLORS_START + 4, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 5, 246, 124, 95);
+	init_color(CUSTOM_COLORS_START + 5, 118, 209, 100);
 	init_pair(CUSTOM_COLORS_START + 5, CUSTOM_COLORS_START + 5, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 6, 246, 194, 59);
+	init_color(CUSTOM_COLORS_START + 6, 57, 11, 112);
 	init_pair(CUSTOM_COLORS_START + 6, CUSTOM_COLORS_START + 6, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 7, 237, 207, 114);
+	init_color(CUSTOM_COLORS_START + 7, 209, 54, 54);
 	init_pair(CUSTOM_COLORS_START + 7, CUSTOM_COLORS_START + 7, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 8, 237, 204, 197);
+	init_color(CUSTOM_COLORS_START + 8, 108, 213, 217);
 	init_pair(CUSTOM_COLORS_START + 8, CUSTOM_COLORS_START + 8, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 9, 237, 200, 80);
+	init_color(CUSTOM_COLORS_START + 9, 193, 149, 237);
 	init_pair(CUSTOM_COLORS_START + 9, CUSTOM_COLORS_START + 9, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 10, 237, 197, 63);
+	init_color(CUSTOM_COLORS_START + 10, 245, 110, 240);
 	init_pair(CUSTOM_COLORS_START + 10, CUSTOM_COLORS_START + 10, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 11, 237, 194, 46);
+	init_color(CUSTOM_COLORS_START + 11, 237, 133, 69);
 	init_pair(CUSTOM_COLORS_START + 11, CUSTOM_COLORS_START + 11, COLOR_BLACK);
 	// for (int i = 1; i < 17; i++)
 	// {
@@ -290,7 +292,7 @@ void	replace_empty_cells(t_game *game)
 ╚═╗║  ║ ║╠╦╝║╣
 ╚═╝╚═╝╚═╝╩╚═╚═╝
 
-┌─┐┌─┐┌─┐┬─┐┌─┐
+┌─┐┌─┐┌─┐┬─┐┌─┐─
 └─┐│  │ │├┬┘├┤ 
 └─┘└─┘└─┘┴└─└─┘
 
@@ -310,6 +312,7 @@ int	draw_score(t_game *game, int start_y, int start_x)
 	int	shift_left = 0;
 	int y = 0;
 
+	game->max_score = read_best_score();
 	output[0] = "SCORE: ";
 	output[1] = "BEST: ";
 	wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
@@ -510,7 +513,7 @@ int	loser_wnd(t_game *game, WINDOW *win)
 	return (0);
 } */
 
-int	read_best_score(void)
+static int	read_best_score(void)
 {
 	int	fbest = open(FBEST, O_RDONLY);
 	if (fbest < 0)
@@ -527,7 +530,7 @@ int	read_best_score(void)
 	return (score_val);
 }
 
-void	save_best_score(int best)
+static void	save_best_score(int best)
 {
 	int	fbest = open(FBEST, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fbest < 0)
