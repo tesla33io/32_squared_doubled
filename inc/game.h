@@ -64,6 +64,7 @@ void			display_board(t_BoardState *brd, t_GameState *game);
 int				update_board(int **array, int size, int dir);
 int				merge(int *array, int size);
 bool			moves_left(int **brd, int size, char dir);
+bool			has_win_condition(int **brd, int size, int win);
 
 /* Utils */
 

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../inc/game.h"
+#include "../../inc/tui_bonus.h"
 #include "../../lib/libft/libft.h"
 
 #include <stdbool.h>
@@ -115,6 +116,19 @@ bool	moves_left(int **brd, int size, char dir)
 			reverse_array(brd[y], size);
 	}
 	return (mleft > 0);
+}
+
+bool	has_win_condition(int **brd, int size, int win)
+{
+	for (int y = 0; y < size; y++)
+	{
+		for (int x = 0; x < size; x++)
+		{
+			if (win != 0 && brd[y][x] == win)
+				return (true);
+		}
+	}
+	return (false);
 }
 
 static	int	count_moves(int *row, int size)

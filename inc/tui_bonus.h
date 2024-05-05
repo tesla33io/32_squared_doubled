@@ -17,7 +17,7 @@
 extern int g_sig;
 
 enum e_const {
-	WIN_VALUE = 2048
+	WIN_VALUE = 8
 };
 
 typedef struct s_game

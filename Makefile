@@ -14,7 +14,7 @@ LIBS			+= -lncurses
 INCLUDES		:= -Iinc/ -Ilib/libft/
 
 # Target executable
-TARGET			:= 2048
+NAME			:= 2048
 
 # Source files directory
 SRC_DIR			:= src/
@@ -54,7 +54,7 @@ TOUCH			:= /bin/touch
 ## $(4) - Additional info
 ## $(5) - Color of the message text
 define	PRINT
-	@echo "$(strip $(1))[$(TARGET) -" \
+	@echo "$(strip $(1))[$(NAME) -" \
 	"$(shell printf '%6s' $(strip $(2)))]:$(strip $(5))" \
 	"$(BOLD)$(strip $(3))$(RESET) $(strip $(5))$(strip $(4))$(RESET)"	
 endef
@@ -70,11 +70,11 @@ ifeq ($(DEBUG), 1)
 	CFLAGS		+= -g3 -O0
 endif
 
-#### TARGET COMPILATION ####
+#### NAME COMPILATION ####
 
 .DEFAULT_GOAL	:= all
 
-all: $(TARGET) ## Build this project
+all: $(NAME) ## Build this project
 
 # Compilation rule for object files
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
@@ -84,11 +84,11 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
 
 # Rule for linking the target executable
-$(TARGET): $(OBJ_FILES) $(LIBFT_LIB)
-	$(call PRINT, $(GREEN), "build", "🔗 linking", "-- $(TARGET)", $(GREEN))
-	@$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) $(INCLUDES) $(LIBS)
+$(NAME): $(OBJ_FILES) $(LIBFT_LIB)
+	$(call PRINT, $(GREEN), "build", "🔗 linking", "-- $(NAME)", $(GREEN))
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ_FILES) $(INCLUDES) $(LIBS)
 	$(call PRINT, $(GREEN), "info", "✨ Build finished!")
-	-@echo -n "🚀 $(MAGENTA)" && ls -lah $(TARGET) && echo -n "$(RESET)"
+	-@echo -n "🚀 $(MAGENTA)" && ls -lah $(NAME) && echo -n "$(RESET)"
 
 #### LOCAL LIBS COMPILATION ####
 
@@ -111,8 +111,8 @@ run:
 	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) clean) ||:
 
 fclean: clean ## Restore project to initial state
-	@$(RM) $(TARGET)
-	$(call PRINT, $(YELLOW), "fclean", "Remove \`$(TARGET)\`", $(YELLOW))
+	@$(RM) $(NAME)
+	$(call PRINT, $(YELLOW), "fclean", "Remove \`$(NAME)\`", $(YELLOW))
 	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) fclean) ||:
 
 re: fclean all ## Rebuild project

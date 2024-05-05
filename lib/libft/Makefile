@@ -13,7 +13,7 @@ LIBS			:=
 INCLUDES		:= -I./
 
 # Target executable
-TARGET			:= libft.a
+NAME			:= libft.a
 
 # Source files directory
 SRC_DIR			:= ./
@@ -107,28 +107,28 @@ ifeq ($(DEBUG), 1)
 	CFLAGS		+= -g3 -O0
 endif
 
-#### TARGET COMPILATION ####
+#### NAME COMPILATION ####
 
 .DEFAULT_GOAL	:= all
 
-all: $(TARGET) ## Build this project
+all: $(NAME) ## Build this project
 
 # Compilation rule for object files
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(MKDIR) $(@D)
-	@echo "$(BLUE)[$(TARGET) -" \
+	@echo "$(BLUE)[$(NAME) -" \
 	"build]:$(CYAN)" \
 	"$(BOLD)compile$(RESET)$(CYAN) $@ $(RESET)"
 	@$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
 
 # Rule for linking the target executable
-$(TARGET): $(OBJ_FILES) ## $(LIBFT_LIB) $(FT_PRINTF_LIB)
-	@echo "$(BLUE)[$(TARGET) -" \
+$(NAME): $(OBJ_FILES) ## $(LIBFT_LIB) $(FT_PRINTF_LIB)
+	@echo "$(BLUE)[$(NAME) -" \
 	"build]:$(GREEN)" \
-	"$(BOLD)Archive$(RESET)$(GREEN) $(TARGET) $(RESET)"
+	"$(BOLD)Archive$(RESET)$(GREEN) $(NAME) $(RESET)"
 	@ar rcs $@ $^
-	@echo "$(BLUE)[$(TARGET) - info]: $(GREEN)$(BOLD)Build finished!$(RESET)"
-	-@echo -n "$(MAGENTA)" && ls -lah $(TARGET) && echo -n "$(RESET)"
+	@echo "$(BLUE)[$(NAME) - info]: $(GREEN)$(BOLD)Build finished!$(RESET)"
+	-@echo -n "$(MAGENTA)" && ls -lah $(NAME) && echo -n "$(RESET)"
 
 #### LOCAL LIBS COMPILATION ####
 
@@ -137,15 +137,15 @@ $(TARGET): $(OBJ_FILES) ## $(LIBFT_LIB) $(FT_PRINTF_LIB)
 clean: ## Clean objects and dependencies
 	@$(RM) $(OBJ_FILES)
 	@$(RM) -r $(OBJ_DIR)
-	@echo "$(BLUE)[$(TARGET) - clean]: $(YELLOW)$(BOLD)Remove objects$(RESET)"
+	@echo "$(BLUE)[$(NAME) - clean]: $(YELLOW)$(BOLD)Remove objects$(RESET)"
 	@$(RM) $(DEPENDS)
 	@$(RM) -r $(DEP_DIR)
-	@echo "$(BLUE)[$(TARGET) - clean]: $(YELLOW)$(BOLD)Remove dependecies$(RESET)"
+	@echo "$(BLUE)[$(NAME) - clean]: $(YELLOW)$(BOLD)Remove dependecies$(RESET)"
 
 fclean: clean ## Restore project to initial state
-	@$(RM) $(TARGET)
-	@echo -n "$(BLUE)[$(TARGET) - "
-	@echo "fclean]: $(YELLOW)$(BOLD)Remove$(RESET)$(YELLOW) \`$(TARGET)\`$(RESET)"
+	@$(RM) $(NAME)
+	@echo -n "$(BLUE)[$(NAME) - "
+	@echo "fclean]: $(YELLOW)$(BOLD)Remove$(RESET)$(YELLOW) \`$(NAME)\`$(RESET)"
 
 re: fclean all ## Rebuild project
 
