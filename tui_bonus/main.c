@@ -3,6 +3,7 @@
 int		game_loop(t_game *game);
 void	start_game(int sig);
 void	game_init(t_game *game);
+int		get_box_width(int win_x);
 
 void	draw_rectangle(WINDOW *win, int row, int col, int width, int value);
 void	draw_cell(WINDOW *win, int row, int col, int width, int value);
@@ -41,9 +42,9 @@ void	setup_color_pairs(void)
 	init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
 	init_pair(6, COLOR_CYAN, COLOR_BLACK);
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 0, 249, 246, 242); //for nbr
+	init_color(CUSTOM_COLORS_START + 0, 249, 246, 242);
 	init_pair(CUSTOM_COLORS_START + 0, CUSTOM_COLORS_START + 0, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 1, 238, 228, 218); //for cells
+	init_color(CUSTOM_COLORS_START + 1, 238, 228, 218);
 	init_pair(CUSTOM_COLORS_START + 1, CUSTOM_COLORS_START + 1, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 2, 237, 224, 200);
 	init_pair(CUSTOM_COLORS_START + 2, CUSTOM_COLORS_START + 2, COLOR_BLACK);
@@ -65,17 +66,6 @@ void	setup_color_pairs(void)
 	init_pair(CUSTOM_COLORS_START + 10, CUSTOM_COLORS_START + 10, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 11, 237, 194, 46);
 	init_pair(CUSTOM_COLORS_START + 11, CUSTOM_COLORS_START + 11, COLOR_BLACK);
-	// for (int i = 1; i < 16; i++)
-	// {
-	// 	int r = i * 25 + 50;
-	// 	int g = i * 25 + 150;
-	// 	int b = i * 25 + 190;
-	// 	init_color(CUSTOM_COLORS_START + i, r, g, b);
-	// }
-	// for (int i = 0; i < 16; i++)
-	// {
-	// 	init_pair(8 + i, CUSTOM_COLORS_START + i, COLOR_BLACK);
-	// }
 }
 
 
@@ -111,110 +101,13 @@ int	win_init(t_game *game)
 	terminal_start();
 	getmaxyx(stdscr, game->y_max, game->x_max);
 	game->menu = true;
-	game->main_w = newwin(game->y_max - 1, game->x_max- 1, 0, 0);
+	game->main_w = newwin(game->y_max, game->x_max, 0, 0);
 	if (is_power_two(WIN_VALUE) == 1)
 		game->win_value = WIN_VALUE;
 	else
 		game->win_value = 0;
 	return (0);
 }
-
-// Game over!
-// Try again
-/* 
-int	winer_state(t_game *game)
-{
-	// You win!
-	// Keep going
-	// Try again
-	char *titel[4];
-	int ch;
-	int higlight;
-	int	y, x, wy_max, wx_max = 0;
-	int cur_pos, start_x;
-	int	quit = 1;
-
-	cbreak();
-	noecho();
-	curs_set(0);
-
-	getmaxyx(stdscr, y, x);
-	if (y >= 16)
-	{
-		wy_max = y / 2;
-		y /= 4;
-	}
-	else
-	{
-		wy_max = y;
-		y = 0;
-	}
-	if (x >= 48)
-	{
-		wx_max = x / 2;
-		x /= 4;
-	}
-	else
-	{
-		wx_max = x;
-		x = 0;
-	}
-	WINDOW *winer = newwin(wy_max, wx_max, y, x);
-	if (y > 3)
-		wborder(winer, '|', '|', '-', '-', '+', '+', '+', '+');
-	keypad(winer, true);
-
-	titel[0] = "You win!";
-	titel[1] = "Keep going";
-	titel[2] = "Try again";
-	higlight = 1;
-	while (1)
-	{
-		start_x = (x / 2) + strlen(titel[0]) + strlen(titel[0]) / 2;
-		wattron(winer, COLOR_PAIR(6) | A_BOLD | A_DIM | A_BLINK);
-		mvwprintw(winer, y / 2, start_x, "%s", titel[0]);
-		wattroff(winer, COLOR_PAIR(6) | A_BOLD | A_DIM | A_BLINK);
-		if (higlight == 1)
-			wattron(winer, A_REVERSE);
-		start_x = (x / 2) + strlen(titel[1]) / 2;
-		mvwprintw(winer, y / 2 + 1, start_x, "%s", titel[1]);
-		wattroff(winer, A_REVERSE);
-		if (higlight == 2)
-			wattron(winer, A_REVERSE);
-		start_x = start_x + strlen(titel[1]) + 3;
-		mvwprintw(winer, y / 2 + 1, start_x, "%s", titel[2]);
-		wattroff(winer, A_REVERSE);
-		ch = wgetch(winer);
-		if (ch == 10)
-		{
-			game->grid = higlight;
-			quit = 0;
-			delwin(winer);
-			break ;
-		}
-		if (ch == 27)
-		{
-			delwin(winer);
-			endwin();
-			quit = -1;
-			break ;
-		}
-		switch (ch)
-		{
-		case KEY_RIGHT:
-			higlight = 2;
-			break;
-		case KEY_LEFT:
-			higlight = 1;
-			break;
-		default:
-			break;
-		}
-		wrefresh(winer);
-	}
-	return (quit);
-}
- */
 
 void	win_resize(t_game *game)
 {
@@ -259,17 +152,13 @@ int	menu_init(t_game *game)
 	higlight = 4;
 	game->grid = 0;
 	win_state = game->win_value;
-	w_x = game->x_max - 1;
-	if (w_x > 105)
-		w_x = 104;
-	w_y = game->y_max - 1;
 	while (1)
 	{
 		wclear(game->main_w);
 		wattron(game->main_w, A_BOLD);
-		width = w_x * 0.5;
-		y_start = w_y / 2 - width / 2 + width / 5;
-		x_start = w_x / 2 - width / 2;
+		width = get_box_width(game->x_max);
+		y_start = game->y_max / 2 - width / 2 + width / 5;
+		x_start = game->x_max / 2 - width / 2;
 		draw_cell(game->main_w, y_start, x_start, width, 8);
 		shift = width / 6;
 		mvwprintw(game->main_w, y_start + shift, x_start + shift * 0.9, "%s", titel[0]);
@@ -422,7 +311,7 @@ int	draw_score(t_game *game, int start_y, int start_x)
 	output[1] = "BEST: ";
 	// output[4] = "BEST";
 	// output[5] = "BEST";
-	wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC); //  | A_REVERSE  | A_ITALIC
+	wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
 	// for (int i = 0; i < 3; i++)
 	// {
 	// 	mvwaddch(game->main_w, start_y, start_x, output[i]);
@@ -434,7 +323,7 @@ int	draw_score(t_game *game, int start_y, int start_x)
 	y++;
 	mvwprintw(game->main_w, start_y + y, start_x, "%s", output[y]);
 	mvwprintw(game->main_w, start_y + y, start_x + (int)strlen(output[y]), "%d", game->max_score);
-	wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC); //  | A_REVERSE  | A_ITALIC
+	wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
 	return (y + 1);
 }
 
@@ -444,8 +333,12 @@ int	draw_score(t_game *game, int start_y, int start_x)
 void	draw_cell(WINDOW *win, int row, int col, int width, int value)
 {
 	// https://de.wikibooks.org/wiki/Ncurses:_Fenster
+	int	power;
 
-	int	power = get_power(value);
+	if (value <= 0)
+		power = value;
+	else
+		power = get_power(value);
 	wattron(win, COLOR_PAIR(CUSTOM_COLORS_START + power) | A_BOLD);
 	mvwhline(win, row, col, ACS_HLINE, width);
 	mvwhline(win, row + width / 2, col, ACS_HLINE, width);
@@ -577,6 +470,41 @@ int	set_random_nbr(t_game *game, int nbr)
 	game->board[r][c] = nbr;
 	return (0);
 }
+int	get_box_width(int win_x)
+{
+	int w_x = win_x - 1;
+	if (w_x > 105)
+		w_x = 104;
+	return (w_x * 0.5);
+}
+
+int	loser_wnd(t_game *game, WINDOW *win)
+{
+	char *titel[3];
+	int ch, x_start, y_start, width, win_state, shift, w_x, w_y = 0;
+
+	titel[0] = "Game over!";
+	titel[1] = "ENTER: Start again";
+	titel[2] = "ESCAPE: Quit the game";
+	keypad(win, TRUE);
+	while (1)
+	{
+		werase(win);
+		width = get_box_width(game->x_max);
+		// x_start = get_midle();
+		wrefresh(win);
+		ch = wgetch(win);
+		if (ch == 10)
+		{
+			game->menu = true;
+			return (start_game(28), 0);
+		}
+		else if (ch == 27)
+			return (endwin(), 1);
+		
+	}
+	return (0);
+}
 
 int	moves(t_game *game, char dir)
 {
@@ -584,8 +512,9 @@ int	moves(t_game *game, char dir)
 		return (1);
 	if (set_random_nbr(game, get_random_nbr()) != 0) // && is_movement(game) != 0 // no possible moements
 	{
-		werase(game->main_w);
 		start_game(28);
+		// if (loser_wnd(game, game->main_w) != 0)
+		// 	return (1);
 	}
 	grid(game);
 	return (0);
@@ -709,7 +638,7 @@ int	game_loop(t_game *game)
 
 void	start_game(int sig)
 {
-	if (sig != 28)
+	if (sig != SIGWINCH)
 		return ;
 	static t_game	game;
 	// win_resize(&game);
@@ -726,6 +655,6 @@ int	main (void)
 {
 	signal(SIGWINCH, handle_sigint);
 	// signal(SIGINT, handle_sigint);
-	start_game(28);
+	start_game(SIGWINCH);
 	return (0);
 }
