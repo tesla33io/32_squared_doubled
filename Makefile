@@ -1,25 +1,33 @@
 #### MAIN SETTINGS ####
 
 # Compiler to be used
-CC				:= cc -g
+CC				:= cc
 
 # Compiler flags
-CFLAGS			:= #-Wall -Werror -Wextra #-pedantic -O3
+CFLAGS			:= -Wall -Werror -Wextra -pedantic -O3
 
 # Libraries to be linked (if any)
-LIBS			:= -lncurses
+LIBS			+= -Llib/libft/ -lft
+LIBS			+= -lncurses
 
 # Include directories
-INCLUDES		:= -Iinc/
+INCLUDES		:= -Iinc/ -Ilib/libft/
 
 # Target executable
-NAME			:= 2048
+TARGET			:= 2048
 
 # Source files directory
-SRC_DIR			:= tui_bonus/
+SRC_DIR			:= src/
 
 # Source files
-SRC_FILES		+= main.c
+SRC_FILES		+= main.c				# Main
+SRC_FILES		+= game.c				# Game settings
+SRC_FILES		+= board/board.c		# Board related functions
+SRC_FILES		+= board/display.c		# Board related functions
+SRC_FILES		+= board/update.c		# Board related functions
+SRC_FILES		+= utils/array_utils.c	# Utils for arrays
+
+SRC_FILES		+= tui_bonus/main.c	# 
 
 # Object files directory
 OBJ_DIR			:= obj/
@@ -40,17 +48,21 @@ RM				:= /bin/rm -f
 MKDIR			:= /bin/mkdir -p
 TOUCH			:= /bin/touch
 
-#### SPECIAL VARIABLES ####
-
-BONUS			?= 1
+## $(1) - Color of the message type
+## $(2) - Message type
+## $(3) - Main message text (in bold)
+## $(4) - Additional info
+## $(5) - Color of the message text
+define	PRINT
+	@echo "$(strip $(1))[$(TARGET) -" \
+	"$(shell printf '%6s' $(strip $(2)))]:$(strip $(5))" \
+	"$(BOLD)$(strip $(3))$(RESET) $(strip $(5))$(strip $(4))$(RESET)"	
+endef
 
 #### LOCAL LIBRARIES ####
 
-## FT_PRINTF_PATH	:= ft_printf/
-## FT_PRINTF_LIB	:= $(FT_PRINTF_PATH)libftprintf.a
-
-## LIBFT_PATH		:= libft/
-## LIBFT_LIB		:= $(LIBFT_PATH)libft.a
+LIBFT_PATH		:= lib/libft/
+LIBFT_LIB		:= $(LIBFT_PATH)libft.a
 
 #### DEBUG SETTINGS ####
 
@@ -62,69 +74,54 @@ endif
 
 .DEFAULT_GOAL	:= all
 
-all: $(NAME) ## Build this project
+all: $(TARGET) ## Build this project
 
 # Compilation rule for object files
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(MKDIR) $(@D)
-	@echo "$(BLUE)[$(NAME) -" \
-	"build]:$(CYAN)" \
-	"$(BOLD)compile$(RESET)$(CYAN) $@ $(RESET)"
-	@$(CC) $(CFLAGS) -DWITH_BONUS=$(BONUS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@ 
+
+	$(call PRINT, $(CYAN), "build", "compiling", "$@", $(CYAN))
+	@$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
 
 # Rule for linking the target executable
-$(NAME): $(OBJ_FILES)
-##	@echo $(BONUS)
-	@echo "$(BLUE)[$(NAME) -" \
-	"build]:$(GREEN)" \
-	"$(BOLD)Link$(RESET)$(GREEN) $(NAME) $(RESET)"
-	$(CC) $(CFLAGS) -DWITH_BONUS=$(BONUS) -o $(NAME) $(OBJ_FILES) $(INCLUDES) $(LIBS)
-	@echo "$(BLUE)[$(NAME) -" \
-	"info]: $(GREEN)$(BOLD)Build finished!$(RESET)"
-	-@echo -n "$(MAGENTA)" && ls -lah $(NAME) && echo -n "$(RESET)"
-
-bonus: ## Run program with bonus part
-	BONUS ?= 1
-	$(MAKE)
+$(TARGET): $(OBJ_FILES) $(LIBFT_LIB)
+	$(call PRINT, $(GREEN), "build", "🔗 linking", "-- $(TARGET)", $(GREEN))
+	@$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) $(INCLUDES) $(LIBS)
+	$(call PRINT, $(GREEN), "info", "✨ Build finished!")
+	-@echo -n "🚀 $(MAGENTA)" && ls -lah $(TARGET) && echo -n "$(RESET)"
 
 #### LOCAL LIBS COMPILATION ####
 
-## $(FT_PRINTF_LIB):
-## 	@$(MAKE) -sC $(FT_PRINTF_PATH)
-
-## $(LIBFT_LIB):
-## 	@$(MAKE) -C $(LIBFT_PATH)
+$(LIBFT_LIB):
+	@$(MAKE) -C $(LIBFT_PATH)
 
 #### ADDITIONAL RULES ####
 
 clean: ## Clean objects and dependencies
 	@$(RM) $(OBJ_FILES)
 	@$(RM) -r $(OBJ_DIR)
-	@echo "$(BLUE)[$(NAME) -" \
-	"clean]: $(YELLOW)$(BOLD)Remove objects$(RESET)"
-	@$(RM) $(DEPENDS)
-	@$(RM) -r $(DEP_DIR)
-	@echo "$(BLUE)[$(NAME) -" \
-	"clean]: $(YELLOW)$(BOLD)Remove dependecies$(RESET)"
-## 	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) clean) ||:
-
-fclean: clean ## Restore project to initial state
-	@$(RM) $(NAME)
-	@echo "$(BLUE)[$(NAME) -" \
-	"fclean]:$(YELLOW)" \
-	"$(BOLD)Remove$(RESET)$(YELLOW) \`$(NAME)\`$(RESET)"
-##	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) fclean) ||:
-
-re: fclean all ## Rebuild project
 
 run:
 	valgrind --suppressions=2048.supp --leak-check=full --show-leak-kinds=all ./2048
+
+	$(call PRINT, $(YELLOW), "clean", "Remove objects", $(YELLOW))
+	@$(RM) $(DEPENDS)
+	@$(RM) -r $(DEP_DIR)
+	$(call PRINT, $(YELLOW), "clean", "Remove dependencies", $(YELLOW))
+	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) clean) ||:
+
+fclean: clean ## Restore project to initial state
+	@$(RM) $(TARGET)
+	$(call PRINT, $(YELLOW), "fclean", "Remove \`$(TARGET)\`", $(YELLOW))
+	@(test -s $(LIBFT_LIB) && $(MAKE) -C $(LIBFT_PATH) fclean) ||:
+
+re: fclean all ## Rebuild project
 
 help: ## Show help info
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "$(CYAN)%-30s$(RESET) %s\n", $$1, $$2}'
 
-.PHONY: all re clean fclean help bonus
+.PHONY: all re clean fclean help run
 
 #### COLORS ####
 # Color codes
