@@ -21,6 +21,8 @@
  */
 void	update_board(int **array, int size, int dir)
 {
+	if (dir == '0')
+		return ;
 	for (int y = 0; y < size; y++)
 	{
 		if (dir == 'u' || dir == 'd')

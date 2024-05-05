@@ -8,6 +8,7 @@
 # include <signal.h>
 # include <fcntl.h>
 # include <string.h>
+# include "game.h"
 
 # define CUSTOM_COLORS_START 8
 # define MAX_SIZE 5
@@ -24,7 +25,8 @@ typedef struct s_game
 	WINDOW	*main_w;
 	FILE	*save_score;
 	bool 	menu;
-	int 	board[MAX_SIZE][MAX_SIZE];
+	// int 	board[MAX_SIZE][MAX_SIZE];
+	int		**board;
 	int		score;
 	int	max_score;
 	int		x_max;

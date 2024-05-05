@@ -36,10 +36,10 @@ typedef struct s_BoardState
 //	t_deque	*gc; /* List of pointers for custom GC system */
 }	t_BoardState;
 
-enum e_const
+/* enum e_const
 {
 	WIN_VALUE = 2048
-};
+}; */
 
 /* ncurses settings */
 
@@ -60,7 +60,7 @@ t_GameState		*initialize_game(void);
 void			destroy_game(t_GameState *game);
 
 void			display_board(t_BoardState *brd, t_GameState *game);
-
+//===========
 void			update_board(int **array, int size, int dir);
 void			merge(int *array, int size);
 

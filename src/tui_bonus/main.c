@@ -1,4 +1,4 @@
-#include "../tui_bonus.h"
+#include "../../inc/tui_bonus.h"
 
 int		game_loop(t_game *game);
 void	start_game(int sig);
@@ -44,21 +44,21 @@ void	setup_color_pairs(void)
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 0, 249, 246, 242);
 	init_pair(CUSTOM_COLORS_START + 0, CUSTOM_COLORS_START + 0, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 1, 238, 228, 218);
+	init_color(CUSTOM_COLORS_START + 1, 238, 28, 218);
 	init_pair(CUSTOM_COLORS_START + 1, CUSTOM_COLORS_START + 1, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 2, 237, 224, 200);
+	init_color(CUSTOM_COLORS_START + 2, 207, 224, 200);
 	init_pair(CUSTOM_COLORS_START + 2, CUSTOM_COLORS_START + 2, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 3, 242, 177, 121);
 	init_pair(CUSTOM_COLORS_START + 3, CUSTOM_COLORS_START + 3, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 4, 245, 149, 99);
+	init_color(CUSTOM_COLORS_START + 4, 245, 149, 199);
 	init_pair(CUSTOM_COLORS_START + 4, CUSTOM_COLORS_START + 4, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 5, 246, 124, 95);
 	init_pair(CUSTOM_COLORS_START + 5, CUSTOM_COLORS_START + 5, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 6, 246, 94, 59);
+	init_color(CUSTOM_COLORS_START + 6, 246, 194, 59);
 	init_pair(CUSTOM_COLORS_START + 6, CUSTOM_COLORS_START + 6, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 7, 237, 207, 114);
 	init_pair(CUSTOM_COLORS_START + 7, CUSTOM_COLORS_START + 7, COLOR_BLACK);
-	init_color(CUSTOM_COLORS_START + 8, 237, 204, 97);
+	init_color(CUSTOM_COLORS_START + 8, 237, 204, 197);
 	init_pair(CUSTOM_COLORS_START + 8, CUSTOM_COLORS_START + 8, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 9, 237, 200, 80);
 	init_pair(CUSTOM_COLORS_START + 9, CUSTOM_COLORS_START + 9, COLOR_BLACK);
@@ -367,12 +367,12 @@ void	draw_rectangle(WINDOW *win, int row, int col, int width, int value)
 
 void	draw_value(WINDOW *win, int row, int col, int value)
 {
-	if (value == 0)
+	if (value <= 0)
 		return ;
 
-	wattron(win, COLOR_WHITE | A_BOLD);
-	mvwprintw(win, row, col, "%d", value);
-	wattroff(win, COLOR_WHITE | A_BOLD);
+	// wattron(win, COLOR_WHITE | A_BOLD);
+	mvwprintw(win, row, col, "%i", value);
+	// wattroff(win, COLOR_WHITE | A_BOLD);
 }
 
 void	draw_grid(t_game *game, int y, int x, int width)
@@ -384,7 +384,7 @@ void	draw_grid(t_game *game, int y, int x, int width)
 		col = 0;
 		while (col < size)
 		{
-			draw_cell(game->main_w, y + (row * width / 2), x + (col * width), width, game->board[row][col]);
+			draw_cell(game->main_w, y + (row * width / 2), x + (col * width), width, 0);
 			draw_rectangle(game->main_w, y + (row * width / 2), x + (col * width), width, game->board[row][col]);
 			draw_value(game->main_w, y + (row * width / 2) + width / 4, x + col * width + (width / 2), game->board[row][col]);
 			col++;
@@ -438,7 +438,7 @@ int	is_movement(t_game *game)
 int get_random_nbr(void)
 {
 	int	nbr = rand() % 100;
-	if (nbr < 80)
+	if (nbr < 90)
 		return (2);
 	else
 		return (4);
@@ -470,6 +470,7 @@ int	set_random_nbr(t_game *game, int nbr)
 	game->board[r][c] = nbr;
 	return (0);
 }
+
 int	get_box_width(int win_x)
 {
 	int w_x = win_x - 1;
@@ -510,6 +511,7 @@ int	moves(t_game *game, char dir)
 {
 	if (dir == '0')
 		return (1);
+	update_board(game->board, game->grid, game->dir);
 	if (set_random_nbr(game, get_random_nbr()) != 0) // && is_movement(game) != 0 // no possible moements
 	{
 		start_game(28);
@@ -562,13 +564,27 @@ void	new_game(t_game *game)
 		}
 		if (moves(game, game->dir) == -1)
 			return ;
+		
 	}
 }
 
 void	game_init(t_game *game)
 {
 	int size = game->grid;
+	game->board = ft_malloc(NULL, sizeof(int *) * size);
+	if (!game->board)
+	{
+		endwin();
+		return ;
+	}
 	for (int i = 0; i < size; i++) {
+		game->board[i] = ft_malloc(NULL, sizeof(int) * size);
+		if (!game->board[i])
+		{
+			free(game->board);
+			endwin();
+			return ;
+		}
 		for (int j = 0; j < size; j++) {
 			game->board[i][j] = 0;
 		}
