@@ -26,7 +26,6 @@ typedef struct s_game
 	WINDOW	*main_w;
 	FILE	*save_score;
 	bool 	menu;
-	// int 	board[MAX_SIZE][MAX_SIZE];
 	int		**board;
 	int		score;
 	int	max_score;
@@ -38,7 +37,6 @@ typedef struct s_game
 
 
 int		game_loop(t_game *game);
-void	start_game(int sig);
 void	game_init(t_game *game);
 int		get_box_width(int win_x);
 void	draw_rectangle(WINDOW *win, int row, int col, int width, int value);
@@ -51,6 +49,9 @@ void	grid(t_game *game);
 int		intlen(int value);
 int		draw_score(t_game *game, int start_y, int start_x);
 int	menu_init(t_game *game);
+void	destroy_board(int **brd, int size);
+int	is_power_two(int value);
+
 /*
 Warning: terminal too small,
 please either resize your terminal,

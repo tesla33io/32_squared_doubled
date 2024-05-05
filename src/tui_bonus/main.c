@@ -19,7 +19,7 @@ int	get_power(int value)
 {
 	int result = 1;
 	int i = 0;
-	if (value == 0)
+	if (value <= 0 || value > 2048)
 		return (0);
 	while (result < value)
 	{
@@ -27,6 +27,13 @@ int	get_power(int value)
 		i++;
 	}
 	return (i);
+}
+
+void	destroy_board(int **brd, int size)
+{
+	for (int y = 0; y < size; y++)
+		ft_free_ptr(brd[y]);
+	ft_free_ptr(brd);
 }
 
 
@@ -63,17 +70,6 @@ void	setup_color_pairs(void)
 	init_pair(CUSTOM_COLORS_START + 10, CUSTOM_COLORS_START + 10, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 11, 237, 133, 69);
 	init_pair(CUSTOM_COLORS_START + 11, CUSTOM_COLORS_START + 11, COLOR_BLACK);
-	// for (int i = 1; i < 17; i++)
-	// {
-	// 	int r = rand() % 256;
-	// 	int g = rand() % 256;
-	// 	int b = rand() % 256;
-	// 	init_color(CUSTOM_COLORS_START + i, r, g, b);
-	// 	for (int i = 0; i < 17; i++)
-	// 	{
-	// 		init_pair(CUSTOM_COLORS_START + i, CUSTOM_COLORS_START + i, COLOR_BLACK);
-	// 	}
-	// }
 }
 
 
@@ -110,45 +106,8 @@ int	win_init(t_game *game)
 	getmaxyx(stdscr, game->y_max, game->x_max);
 	game->menu = true;
 	game->main_w = newwin(game->y_max, game->x_max, 0, 0);
-	if (is_power_two(WIN_VALUE) == 1)
-		game->win_value = WIN_VALUE;
-	else
-		game->win_value = 0;
 	return (0);
 }
-
-void	win_resize(t_game *game)
-{
-	// if (g_sig != 28)
-		// retuwrn ;
-	int new_height, new_width, term_y, term_x = 0;
-	// werase(game->main_w);
-	// clear();
-
-	getmaxyx(game->main_w, new_height, new_width);
-	wresize(game->main_w, new_height, new_width);
-	// redrawwin(game->main_w);
-	// WINDOW *temp_w = newwin(new_height, new_width, 0, 0);
-	// copywin(game->main_w, temp_w, 0, 0, 0, 0, new_height - 1, new_width - 1, TRUE);
-	// delwin(game->main_w);
-
-	// endwin(); //end terminal
-	// terminal_start();
-	getmaxyx(stdscr, term_y, term_x);
-	game->y_max = term_y - 1;
-	game->x_max = term_x - 1;
-	// game->main_w = newwin(term_y, term_x, 0, 0);
-	// copywin(temp_w, game->main_w, 0, 0, 0, 0, term_y - 1, term_x - 1, TRUE);
-	// delwin(temp_w);
-	// refresh();
-	// doupdate();
-	wrefresh(game->main_w);
-	game_loop(game);
-}
-
-// void	draw_in_middle(t_game *game, )
-
-
 
 int	draw_score(t_game *game, int start_y, int start_x)
 {
@@ -171,12 +130,8 @@ int	draw_score(t_game *game, int start_y, int start_x)
 	return (y + 1);
 }
 
-
-// int mvwhline(WINDOW *, int y, int x, chtype ch, int n);
-// int mvwvline(WINDOW *, int y, int x, chtype ch, int n);
 void	draw_cell(WINDOW *win, int row, int col, int width, int value)
 {
-	// https://de.wikibooks.org/wiki/Ncurses:_Fenster
 	int	power = 0;
 
 	if (value <= 0)
@@ -237,18 +192,6 @@ void	draw_grid(t_game *game, int y, int x, int width)
 	}
 }
 
-void	draw_board(t_game *game, int board[MAX_SIZE][MAX_SIZE])
-{
-	int	size = 0;
-	size = game->grid;
-	werase(game->main_w);
-	for (int i = 0; i < size; i++)
-	{
-		for (int j = 0; j < size; j++)
-			mvwprintw(game->main_w, i, j * 5, "%4d", board[i][j]);
-	}
-	wrefresh(game->main_w);
-}
 
 int	is_movement(t_game *game)
 {
@@ -294,7 +237,7 @@ int	set_random_nbr(t_game *game, int nbr)
 		}
 	}
 	if (i == 0)
-		return (1); //no emply cells
+		return (1);
 	int n = rand() % i;
 	int r = empty_cells[n][0];
 	int c = empty_cells[n][1];
@@ -337,6 +280,7 @@ static void	save_best_score(int best)
 	if (!bscore_str)
 		return ;
 	write(fbest, bscore_str, ft_strlen(bscore_str));
+	ft_free_ptr(bscore_str);
 }
 
 int	moves(t_game *game, char dir)
@@ -344,14 +288,13 @@ int	moves(t_game *game, char dir)
 	if (dir == '0')
 		return (1);
 
-	if (set_random_nbr(game, get_random_nbr()) != 0 && !moves_left(game->board, game->grid, 'l')
+	if (!moves_left(game->board, game->grid, 'l')
 		&& !moves_left(game->board, game->grid, 'r') && !moves_left(game->board, game->grid, 'u')
 		&& !moves_left(game->board, game->grid, 'd') )
 	{
 		if (loser_wnd(game) != 0)
-			return (1);
+			return (-1);
 	}
-
 	if (!moves_left(game->board, game->grid, dir))
 		return (0);
 
@@ -364,9 +307,10 @@ int	moves(t_game *game, char dir)
 
 	if (has_win_condition(game->board, game->grid, game->win_value))
 	{
-		winer_wnd(game);
-		game->win_value = 0;
+		if (winer_wnd(game) != 0)
+			return (-1);
 	}
+	set_random_nbr(game, get_random_nbr());
 	grid(game);
 	return (0);
 }
@@ -383,8 +327,9 @@ void	new_game(t_game *game)
 		int ch = wgetch(game->main_w);
 		if (ch == 27)
 		{
-			delwin(game->main_w);
 			endwin();
+			if (game->board)
+				destroy_board(game->board, game->grid);
 			return ;
 		}
 		switch (ch)
@@ -409,14 +354,14 @@ void	new_game(t_game *game)
 		}
 		if (moves(game, game->dir) == -1)
 			return ;
-		
 	}
 }
 
 void	game_init(t_game *game)
 {
 	int size = game->grid;
-	// if (game->board) -> free // ??
+	if (game->board)
+		destroy_board(game->board, game->grid);
 	game->board = ft_malloc(NULL, sizeof(int *) * size);
 	if (!game->board)
 	{
@@ -427,7 +372,7 @@ void	game_init(t_game *game)
 		game->board[i] = ft_malloc(NULL, sizeof(int) * size);
 		if (!game->board[i])
 		{
-			free(game->board);
+			ft_free_ptr(game->board);
 			endwin();
 			return ;
 		}
@@ -435,6 +380,10 @@ void	game_init(t_game *game)
 			game->board[i][j] = 0;
 		}
 	}
+	if (is_power_two(WIN_VALUE) == 1)
+		game->win_value = WIN_VALUE;
+	else
+		game->win_value = 0;
 	game->score = 0;
 	game->max_score = 0;
 	set_random_nbr(game, 2);
@@ -466,6 +415,7 @@ int	main (void)
 		return (1);
 	if (init_colors() != 0)
 		return (1);
+	game.board = NULL;
 	game_loop(&game);
 	return (0);
 }

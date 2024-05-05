@@ -53,9 +53,6 @@ typedef struct s_GameState
 
 /* FUNCTIONS */
 
-t_BoardState	*initialize_board(int size);
-void			destroy_board(t_BoardState *brd);
-
 t_GameState		*initialize_game(void);
 void			destroy_game(t_GameState *game);
 

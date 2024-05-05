@@ -102,7 +102,7 @@ clean: ## Clean objects and dependencies
 	@$(RM) -r $(OBJ_DIR)
 
 run:
-	valgrind --suppressions=2048.supp --leak-check=full --show-leak-kinds=all ./2048
+	valgrind --suppressions=2048.supp --log-file="r.vgr" --leak-check=full --show-leak-kinds=all ./2048
 
 	$(call PRINT, $(YELLOW), "clean", "Remove objects", $(YELLOW))
 	@$(RM) $(DEPENDS)
