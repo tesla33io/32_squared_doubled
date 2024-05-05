@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 14:09:34 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 19:59:01 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 13:49:47 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	merge(int *array, int size)
 			{
 				merged_array[merged_count] = array[i];
 				merged_count++;
+				array[i] = 0;
 			}
 			last_num = array[i];
 			last_num_pos = i;

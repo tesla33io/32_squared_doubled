@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:17:17 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 19:59:05 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 13:52:26 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,7 @@
 
 int main(/*int ac, char *av[]*/)
 {	
-	/*t_GameState		*game = initialize_game();
-	if (!game)
-		return (-1);
-	t_BoardState	*brd = initialize_board(4);
-	if (!brd)
-		return (-2);
-	display_board(brd, game);
-	wgetch(game->win);
-	destroy_board(brd);
-	destroy_game(game);*/
-
 	int	size = 4;
-	/*if (ac - 1 != size)
-		return (printf("wtf?!\n"));
-	int row[5] = {atoi(av[1]), atoi(av[2]), atoi(av[3]), atoi(av[4]), atoi(av[5])};*/
-	/*int	brds[4][4] = {
-		{0,  2, 0, 2},
-		{4,  2, 2, 4},
-		{8, 16, 8, 0},
-		{8,  0, 2, 2}
-	};*/
 
 	int	**brd = malloc(sizeof(int *) * size);
 	for (int i = 0; i < size; i++)
@@ -57,18 +37,18 @@ int main(/*int ac, char *av[]*/)
 	{
 		printf("|");
 		for (int j = 0; j < size; j++)
-			printf("\t%d", brd[i][j]);
+			printf("\033[32;1m\t%d\033[0m", brd[i][j]);
 		printf("|\n");
 	}
 
-	update_board((int **) brd, size, 'r');
+	update_board((int **) brd, size, 'l');
 
 	printf("Move to the left:\n");
 	for (int i = 0; i < size; i++)
 	{
 		printf("|");
 		for (int j = 0; j < size; j++)
-			printf("\t%d", brd[i][j]);
+			printf("\033[33;1m\t%d\033[0m", brd[i][j]);
 		printf("|\n");
 	}
 
