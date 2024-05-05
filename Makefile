@@ -1,10 +1,10 @@
 #### MAIN SETTINGS ####
 
 # Compiler to be used
-CC				:= cc
+CC				:= cc -g
 
 # Compiler flags
-CFLAGS			:= #-Wall -Werror -Wextra -pedantic -O3
+CFLAGS			:= #-Wall -Werror -Wextra #-pedantic -O3
 
 # Libraries to be linked (if any)
 LIBS			:= -lncurses
