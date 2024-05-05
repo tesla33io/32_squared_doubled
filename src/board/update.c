@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 14:09:34 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/05 13:49:47 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 14:07:35 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,18 @@ void	update_board(int **array, int size, int dir)
 		if (dir == 'u' || dir == 'd')
 		{
 			// vertical move (tricky)
-			return ;
+			// if down - reverse array
+			int	*row = column_to_row(array, size, y);
+			if (dir == 'd')
+				reverse_array(row, size);
+
+			merge(row, size);
+
+			if (dir == 'd')
+				reverse_array(row, size);
+
+			row_to_column(array, row, size, y);
+			continue ;
 		}
 		if (dir == 'r')
 			reverse_array(array[y], size);

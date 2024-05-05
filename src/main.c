@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:17:17 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/05 13:52:26 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 14:07:59 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int main(/*int ac, char *av[]*/)
 	brd[2] = (int []) {8, 16, 8, 0};
 	brd[3] = (int []) {8,  0, 2, 2};
 
-	printf("Original:\n");
+	printf("\tOriginal:\n");
 	for (int i = 0; i < size; i++)
 	{
 		printf("|");
@@ -41,9 +41,11 @@ int main(/*int ac, char *av[]*/)
 		printf("|\n");
 	}
 
-	update_board((int **) brd, size, 'l');
+	char	dir = 'd';
 
-	printf("Move to the left:\n");
+	update_board((int **) brd, size, dir);
+
+	printf("\tAfter move (%c):\n", dir);
 	for (int i = 0; i < size; i++)
 	{
 		printf("|");

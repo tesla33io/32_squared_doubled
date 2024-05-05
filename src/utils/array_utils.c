@@ -6,11 +6,13 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:51:54 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 18:09:14 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 14:00:36 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
  * Counts the occurrences of a given integer in an array.
@@ -80,4 +82,24 @@ void	reverse_array(int *array, int size)
 		array[i] = array[size - i - 1];
 		array[size - i - 1] = tmp;
 	}
+}
+
+int	*column_to_row(int **brd, int size, int column)
+{
+	int	*row = malloc(sizeof(int) * size);
+	if (!row)
+	{
+		printf("[%s:%d] Error: mem alloc fail\n", __FILE__, __LINE__);
+		return (NULL);
+	}
+	for (int i = 0; i < size; i++)
+		row[i] = brd[i][column];
+	return (row);
+}
+
+void	row_to_column(int **brd, int *row, int size, int column)
+{
+	for (int i = 0; i < size; i++)
+		brd[i][column] = row[i];
+	free(row);
 }

@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:28:41 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/04 18:12:11 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 14:00:47 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,7 @@ int				count(int *array, int size, int n);
 void			right_align(int *array, int size, int last);
 bool			is_mergeable(int *array, int size, int index);
 void			reverse_array(int *array, int size);
+int				*column_to_row(int **brd, int size, int column);
+void			row_to_column(int **brd, int *row, int size, int column);
 
 #endif /* GAME_H */
