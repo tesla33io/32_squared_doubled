@@ -4,7 +4,7 @@
 CC				:= cc
 
 # Compiler flags
-CFLAGS			:= #-Wall -Werror -Wextra -pedantic -O3
+CFLAGS			:= #-Wall -Werror -Wextra -pedantic -O3
 
 # Libraries to be linked (if any)
 LIBS			+= -Llib/libft/ -lft
@@ -27,8 +27,8 @@ SRC_FILES		+= board/display.c		# Board related functions
 SRC_FILES		+= board/update.c		# Board related functions
 SRC_FILES		+= utils/array_utils.c	# Utils for arrays
 
-SRC_FILES		+= tui_bonus/main.c	# 
-
+SRC_FILES		+= tui_bonus/main.c	# Main
+SRC_FILES		+= tui_bonus/win_states.c
 # Object files directory
 OBJ_DIR			:= obj/
 

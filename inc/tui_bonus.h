@@ -36,6 +36,20 @@ typedef struct s_game
 	char	dir;
 }	t_game;
 
+
+int		game_loop(t_game *game);
+void	start_game(int sig);
+void	game_init(t_game *game);
+int		get_box_width(int win_x);
+void	draw_rectangle(WINDOW *win, int row, int col, int width, int value);
+void	draw_cell(WINDOW *win, int row, int col, int width, int value);
+void	draw_value(WINDOW *win, int row, int col, int value);
+int		loser_wnd(t_game *game);
+int		winer_wnd(t_game *game);
+void	draw_grid(t_game *game, int y, int x, int width);
+void	grid(t_game *game);
+int		intlen(int value);
+int		draw_score(t_game *game, int start_y, int start_x);
 /*
 Warning: terminal too small,
 please either resize your terminal,

@@ -2,14 +2,7 @@
 #include <ncurses.h>
 #include <unistd.h>
 
-int		game_loop(t_game *game);
-void	start_game(int sig);
-void	game_init(t_game *game);
-int		get_box_width(int win_x);
 
-void	draw_rectangle(WINDOW *win, int row, int col, int width, int value);
-void	draw_cell(WINDOW *win, int row, int col, int width, int value);
-void	draw_value(WINDOW *win, int row, int col, int value);
 
 int	g_sig = 0;
 
@@ -68,6 +61,17 @@ void	setup_color_pairs(void)
 	init_pair(CUSTOM_COLORS_START + 10, CUSTOM_COLORS_START + 10, COLOR_BLACK);
 	init_color(CUSTOM_COLORS_START + 11, 237, 194, 46);
 	init_pair(CUSTOM_COLORS_START + 11, CUSTOM_COLORS_START + 11, COLOR_BLACK);
+	// for (int i = 1; i < 17; i++)
+	// {
+	// 	int r = rand() % 256;
+	// 	int g = rand() % 256;
+	// 	int b = rand() % 256;
+	// 	init_color(CUSTOM_COLORS_START + i, r, g, b);
+	// 	for (int i = 0; i < 17; i++)
+	// 	{
+	// 		init_pair(CUSTOM_COLORS_START + i, CUSTOM_COLORS_START + i, COLOR_BLACK);
+	// 	}
+	// }
 }
 
 
@@ -162,7 +166,7 @@ int	menu_init(t_game *game)
 		width = get_box_width(game->x_max);
 		y_start = game->y_max / 2 - width / 2 + width / 5;
 		x_start = game->x_max / 2 - width / 2;
-		draw_cell(game->main_w, y_start, x_start, width, 8);
+		draw_cell(game->main_w, y_start, x_start, width, 64);
 		shift = width / 6;
 		mvwprintw(game->main_w, y_start + shift, x_start + shift * 0.9, "%s", titel[0]);
 		if (win_state == 0)
@@ -303,17 +307,21 @@ void	replace_empty_cells(t_game *game)
 int	draw_score(t_game *game, int start_y, int start_x)
 {
 	char *output[2];
-    output[0] = "SCORE: ";
-    output[1] = "BEST: ";
-    wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
-    int y = 0;
-    mvwprintw(game->main_w, start_y + y, start_x, "%s", output[y]);
-    mvwprintw(game->main_w, start_y + y, start_x + (int)strlen(output[y]), "%d", game->score);
-    y += 1;
-    mvwprintw(game->main_w, start_y + y, start_x, "%s", output[y]);
-    mvwprintw(game->main_w, start_y + y, start_x + (int)strlen(output[y]), "%d", game->max_score);
-    wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
-    return (y + 1);
+	int	shift_left = 0;
+	int y = 0;
+
+	output[0] = "SCORE: ";
+	output[1] = "BEST: ";
+	wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
+	shift_left = intlen(game->score) + 5;
+	mvwprintw(game->main_w, start_y + y, start_x - shift_left, "%d", game->score);
+	mvwprintw(game->main_w, start_y + y, start_x - shift_left - (int)ft_strlen(output[y]), "%s", output[y]);
+	y += 1;
+	shift_left = intlen(game->max_score) + 5;
+	mvwprintw(game->main_w, start_y + y, start_x - shift_left, "%d", game->max_score);
+	mvwprintw(game->main_w, start_y + y, start_x - shift_left - (int)ft_strlen(output[y]), "%s", output[y]);
+	wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
+	return (y + 1);
 }
 
 
@@ -347,7 +355,7 @@ void	draw_rectangle(WINDOW *win, int row, int col, int width, int value)
 	int	power = get_power(value);
 
 	wattron(win, COLOR_PAIR(CUSTOM_COLORS_START + power) | A_REVERSE);
-	for (y = row + 1; y < row + width - 5; y++) {
+	for (y = row + 1; y < row + width - (width / 2); y++) {
 		for (x = col + 2; x < col + width - 1; x++) {
 			mvwaddch(win, y, x, ' ');
 		}
@@ -369,7 +377,7 @@ void	draw_grid(t_game *game, int y, int x, int width)
 {
 	int	size = game->grid;
 	int	row = 0;
-	int	col = 0;
+	int col = 0;
 	while (row < size)
 	{
 		col = 0;
@@ -377,28 +385,28 @@ void	draw_grid(t_game *game, int y, int x, int width)
 		{
 			draw_cell(game->main_w, y + (row * width / 2), x + (col * width), width, 0);
 			draw_rectangle(game->main_w, y + (row * width / 2), x + (col * width), width, game->board[row][col]);
-			draw_value(game->main_w, y + (row * width / 2) + width / 4, x + col * width + (width / 2), game->board[row][col]);
+			draw_value(game->main_w, y + (row * width / 2) + width / 4, x + col * width + (width / 2) - intlen(game->board[row][col]) / 2, game->board[row][col]);
 			col++;
 		}
 		row++;
 	}
 }
 
-void	grid(t_game *game)
-{
-	werase(game->main_w);
-	int	size = game->grid;
-	int	row, col, start_x, start_y, width, shift;
-	getmaxyx(game->main_w, row, col);
-	// wprintw(game->main_w, "row: %d, col: %d", row, col);
-	width = 10;
-	// shift = (col - width * size) / 2;
-	if ((width % 2) != 0)
-		width -= width % 2;
-	int y = draw_score(game, 1, 1);
-	draw_grid(game, 1 + y + 1, 1, width);
-	wrefresh(game->main_w);
-}
+// void	grid(t_game *game)
+// {
+// 	werase(game->main_w);
+// 	int	size = game->grid;
+// 	int	row, col, start_x, start_y, width, shift;
+// 	getmaxyx(game->main_w, row, col);
+// 	// wprintw(game->main_w, "row: %d, col: %d", row, col);
+// 	width = 10;
+// 	// shift = (col - width * size) / 2;
+// 	if ((width % 2) != 0)
+// 		width -= width % 2;
+// 	int y = draw_score(game, 1, 1);
+// 	draw_grid(game, 1 + y + 1, 1, width);
+// 	wrefresh(game->main_w);
+// }
 
 void	draw_board(t_game *game, int board[MAX_SIZE][MAX_SIZE])
 {
@@ -472,7 +480,8 @@ int	get_box_width(int win_x)
 		w_x = 104;
 	return (w_x * 0.5);
 }
-/* 
+
+/*
 int	loser_wnd(t_game *game, WINDOW *win)
 {
 	char *titel[3];
@@ -546,9 +555,9 @@ int	moves(t_game *game, char dir)
 
 	if (set_random_nbr(game, get_random_nbr()) != 0) // && is_movement(game) != 0 // no possible moements
 	{
-		start_game(28);
-		// if (loser_wnd(game, game->main_w) != 0)
-		// 	return (1);
+		// start_game(28);
+		if (loser_wnd(game) != 0)
+			return (1);
 	}
 	grid(game);
 	return (0);
@@ -608,6 +617,7 @@ void	new_game(t_game *game)
 void	game_init(t_game *game)
 {
 	int size = game->grid;
+	// if (game->board) -> free // ??
 	game->board = ft_malloc(NULL, sizeof(int *) * size);
 	if (!game->board)
 	{
