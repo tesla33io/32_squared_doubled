@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:17:17 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/05 14:07:59 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 16:28:37 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h> /* DELETE */
 
-/*
 int main()
 {	
 	int	size = 4;
@@ -28,7 +27,7 @@ int main()
 	{
 		brd[i] = malloc(sizeof(int) * size);
 	}
-	brd[0] = (int []) {0,  2, 0, 2};
+	brd[0] = (int []) {0,  2, 2, 2};
 	brd[1] = (int []) {4,  2, 2, 4};
 	brd[2] = (int []) {8, 16, 8, 0};
 	brd[3] = (int []) {8,  0, 2, 2};
@@ -42,7 +41,7 @@ int main()
 		printf("|\n");
 	}
 
-	char	dir = 'd';
+	char	dir = 'u';
 
 	update_board((int **) brd, size, dir);
 
@@ -57,4 +56,3 @@ int main()
 
 	return (0);
 }
-*/
