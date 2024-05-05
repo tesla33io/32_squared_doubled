@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:17:17 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/05 16:28:37 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:00:20 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,15 @@ int main()
 	{
 		brd[i] = malloc(sizeof(int) * size);
 	}
-	brd[0] = (int []) {0,  2, 2, 2};
-	brd[1] = (int []) {4,  2, 2, 4};
-	brd[2] = (int []) {8, 16, 8, 0};
-	brd[3] = (int []) {8,  0, 2, 2};
-
+	brd[0] = (int []) {4,  2,  4, 8};
+	brd[1] = (int []) {2,  4,  8, 2};
+	brd[2] = (int []) {8, 16,  2, 4};
+	brd[3] = (int []) {0,  0,  0, 0};
+	
+	bool mleft = moves_left(brd, size, 'd');
+	printf(mleft ? "There are moves left\n" : "No moves left!\n");
 	printf("\tOriginal:\n");
+	
 	for (int i = 0; i < size; i++)
 	{
 		printf("|");
@@ -40,10 +43,12 @@ int main()
 			printf("\033[32;1m\t%d\033[0m", brd[i][j]);
 		printf("|\n");
 	}
+/*
+	char	dir = 'l';
 
-	char	dir = 'u';
+	int	score = 0;
 
-	update_board((int **) brd, size, dir);
+	score += update_board((int **) brd, size, dir);
 
 	printf("\tAfter move (%c):\n", dir);
 	for (int i = 0; i < size; i++)
@@ -54,5 +59,7 @@ int main()
 		printf("|\n");
 	}
 
+	printf("Score: %d\n", score);
+*/
 	return (0);
 }

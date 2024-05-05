@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:28:41 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/05 14:00:47 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 18:26:27 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,9 @@ void			destroy_game(t_GameState *game);
 
 void			display_board(t_BoardState *brd, t_GameState *game);
 //===========
-void			update_board(int **array, int size, int dir);
-void			merge(int *array, int size);
+int				update_board(int **array, int size, int dir);
+int				merge(int *array, int size);
+bool			moves_left(int **brd, int size, char dir);
 
 /* Utils */
 

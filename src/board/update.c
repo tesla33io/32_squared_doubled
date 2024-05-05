@@ -6,7 +6,7 @@
 /*   By: astavrop <astavrop@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 14:09:34 by astavrop          #+#    #+#             */
-/*   Updated: 2024/05/05 16:28:03 by astavrop         ###   ########.fr       */
+/*   Updated: 2024/05/05 17:42:08 by astavrop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@
  *  - u for up
  *  - d for down
  */
-void	update_board(int **array, int size, int dir)
+int	update_board(int **array, int size, int dir)
 {
 	if (dir == '0')
-		return ;
+		return (0);
+	int	move_score = 0;
 	for (int y = 0; y < size; y++)
 	{
 		if (dir == 'u' || dir == 'd')
@@ -33,7 +34,7 @@ void	update_board(int **array, int size, int dir)
 			if (dir == 'd')
 				reverse_array(row, size);
 
-			merge(row, size);
+			move_score += merge(row, size);
 
 			if (dir == 'd')
 				reverse_array(row, size);
@@ -44,19 +45,21 @@ void	update_board(int **array, int size, int dir)
 		if (dir == 'r')
 			reverse_array(array[y], size);
 
-		merge(array[y], size);
+		move_score += merge(array[y], size);
 
 		if (dir == 'r')
 			reverse_array(array[y], size);
 	}
+	return (move_score);
 }
 
-void	merge(int *array, int size)
+int	merge(int *array, int size)
 {
 	int	merged_array[size];
 	int	last_num = -1;
 	int	last_num_pos = -1;
 	int	merged_count = 0;
+	int	row_score = 0;
 
 	for (int i = 0; i < size; i++)
 		merged_array[i] = 0;
@@ -70,6 +73,7 @@ void	merge(int *array, int size)
 				 * If last num is the same as current number, so we can merge
 				 * two numbers. New number would be created
 				 */
+				row_score += array[i] * 2;
 				merged_array[merged_count] = array[i] * 2;
 				merged_count++;
 				array[i] = 0;
@@ -97,4 +101,5 @@ void	merge(int *array, int size)
 	}
 	for (int i = 0; i < size; i++)
 		array[i] = merged_array[i];
+	return (row_score);
 }

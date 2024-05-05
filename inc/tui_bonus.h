@@ -12,6 +12,7 @@
 
 # define CUSTOM_COLORS_START 8
 # define MAX_SIZE 5
+# define FBEST ".scores"
 
 extern int g_sig;
 

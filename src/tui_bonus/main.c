@@ -1,4 +1,6 @@
 #include "../../inc/tui_bonus.h"
+#include <ncurses.h>
+#include <unistd.h>
 
 int		game_loop(t_game *game);
 void	start_game(int sig);
@@ -156,6 +158,7 @@ int	menu_init(t_game *game)
 	{
 		wclear(game->main_w);
 		wattron(game->main_w, A_BOLD);
+		getmaxyx(game->main_w, game->y_max, game->x_max);
 		width = get_box_width(game->x_max);
 		y_start = game->y_max / 2 - width / 2 + width / 5;
 		x_start = game->x_max / 2 - width / 2;
@@ -197,6 +200,8 @@ int	menu_init(t_game *game)
 		}
 		switch (ch)
 		{
+			case KEY_RESIZE:
+				break;
 			case KEY_RIGHT:
 				higlight = 5;
 				break;
@@ -298,33 +303,17 @@ void	replace_empty_cells(t_game *game)
 int	draw_score(t_game *game, int start_y, int start_x)
 {
 	char *output[2];
-
-	// output[0] = "┏┓┏┓┏┓┳┓┏┓";
-	// output[1] = "┗┓┃ ┃┃┣┫┣ ";
-	// output[2] = "┗┛┗┛┗┛┛┗┗┛";
-	// output[3] = "┳┓┏┓┏┓┏┳┓";
-	// output[4] = "┣┫┣ ┗┓ ┃ ";
-	// output[5] = "┻┛┗┛┗┛ ┻ ";
-	output[0] = "SCORE: ";
-	// output[1] = "SCORE";
-	// output[2] = "SCORE";
-	output[1] = "BEST: ";
-	// output[4] = "BEST";
-	// output[5] = "BEST";
-	wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
-	// for (int i = 0; i < 3; i++)
-	// {
-	// 	mvwaddch(game->main_w, start_y, start_x, output[i]);
-	// 	start_y++;
-	// }
-	int y = 0;
-	mvwprintw(game->main_w, start_y + y, start_x, "%s", output[y]);
-	mvwprintw(game->main_w, start_y + y, start_x + (int)strlen(output[y]), "%d", game->score);
-	y++;
-	mvwprintw(game->main_w, start_y + y, start_x, "%s", output[y]);
-	mvwprintw(game->main_w, start_y + y, start_x + (int)strlen(output[y]), "%d", game->max_score);
-	wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
-	return (y + 1);
+    output[0] = "SCORE: ";
+    output[1] = "BEST: ";
+    wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
+    int y = 0;
+    mvwprintw(game->main_w, start_y + y, start_x, "%s", output[y]);
+    mvwprintw(game->main_w, start_y + y, start_x + (int)strlen(output[y]), "%d", game->score);
+    y += 1;
+    mvwprintw(game->main_w, start_y + y, start_x, "%s", output[y]);
+    mvwprintw(game->main_w, start_y + y, start_x + (int)strlen(output[y]), "%d", game->max_score);
+    wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
+    return (y + 1);
 }
 
 
@@ -333,7 +322,7 @@ int	draw_score(t_game *game, int start_y, int start_x)
 void	draw_cell(WINDOW *win, int row, int col, int width, int value)
 {
 	// https://de.wikibooks.org/wiki/Ncurses:_Fenster
-	int	power;
+	int	power = 0;
 
 	if (value <= 0)
 		power = value;
@@ -353,7 +342,8 @@ void	draw_cell(WINDOW *win, int row, int col, int width, int value)
 
 void	draw_rectangle(WINDOW *win, int row, int col, int width, int value)
 {
-	int y, x = 0;
+	int y = 0;
+	int x = 0;
 	int	power = get_power(value);
 
 	wattron(win, COLOR_PAIR(CUSTOM_COLORS_START + power) | A_REVERSE);
@@ -378,7 +368,8 @@ void	draw_value(WINDOW *win, int row, int col, int value)
 void	draw_grid(t_game *game, int y, int x, int width)
 {
 	int	size = game->grid;
-	int	row, col = 0;
+	int	row = 0;
+	int	col = 0;
 	while (row < size)
 	{
 		col = 0;
@@ -411,7 +402,8 @@ void	grid(t_game *game)
 
 void	draw_board(t_game *game, int board[MAX_SIZE][MAX_SIZE])
 {
-	int	size = game->grid;
+	int	size = 0;
+	size = game->grid;
 	werase(game->main_w);
 	for (int i = 0; i < size; i++)
 	{
@@ -423,7 +415,8 @@ void	draw_board(t_game *game, int board[MAX_SIZE][MAX_SIZE])
 
 int	is_movement(t_game *game)
 {
-	int	size = game->grid;
+	int	size = 0;
+	size = game->grid;
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
@@ -448,7 +441,8 @@ int	set_random_nbr(t_game *game, int nbr)
 {
 	int	empty_cells[MAX_SIZE * MAX_SIZE][2];
 	int	i = 0;
-	int	size = game->grid;
+	int	size = 0;
+	size = game->grid;
 
 	for (int row = 0; row < size; row++)
 	{
@@ -478,7 +472,7 @@ int	get_box_width(int win_x)
 		w_x = 104;
 	return (w_x * 0.5);
 }
-
+/* 
 int	loser_wnd(t_game *game, WINDOW *win)
 {
 	char *titel[3];
@@ -505,13 +499,51 @@ int	loser_wnd(t_game *game, WINDOW *win)
 		
 	}
 	return (0);
+} */
+
+int	read_best_score(void)
+{
+	int	fbest = open(FBEST, O_RDONLY);
+	if (fbest < 0)
+		return (-1);
+	char	score_text[17];
+	int		score_val;
+	int		bytes_read = -1;
+	bytes_read = read(fbest, score_text, 16);
+	if (bytes_read < 0)
+		return (-1);
+	score_text[bytes_read] = 0;
+	score_val = ft_atoi(score_text);
+	close(fbest);
+	return (score_val);
+}
+
+void	save_best_score(int best)
+{
+	int	fbest = open(FBEST, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fbest < 0)
+		return ;
+	char	*bscore_str = ft_itoa(best);
+	if (!bscore_str)
+		return ;
+	write(fbest, bscore_str, ft_strlen(bscore_str));
 }
 
 int	moves(t_game *game, char dir)
 {
 	if (dir == '0')
 		return (1);
-	update_board(game->board, game->grid, game->dir);
+
+	if (!moves_left(game->board, game->grid, dir))
+		return (0);
+
+	game->max_score = read_best_score();
+
+	game->score += update_board(game->board, game->grid, game->dir);
+
+	if (game->score > game->max_score)
+		save_best_score(game->score);
+
 	if (set_random_nbr(game, get_random_nbr()) != 0) // && is_movement(game) != 0 // no possible moements
 	{
 		start_game(28);
@@ -544,8 +576,13 @@ void	new_game(t_game *game)
 			// refresh();
 			return ;
 		}
+		int	y = 0;
+		int	x = 0;
 		switch (ch)
 		{
+			case KEY_RESIZE:
+				continue ;
+				break;
 			case KEY_UP:
 				game->dir = 'u';
 				break;
@@ -669,7 +706,7 @@ void	start_game(int sig)
 
 int	main (void)
 {
-	signal(SIGWINCH, handle_sigint);
+	// signal(SIGWINCH, handle_sigint);
 	// signal(SIGINT, handle_sigint);
 	start_game(SIGWINCH);
 	return (0);
