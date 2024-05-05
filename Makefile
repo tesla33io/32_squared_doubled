@@ -27,6 +27,8 @@ SRC_FILES		+= board/display.c		# Board related functions
 SRC_FILES		+= board/update.c		# Board related functions
 SRC_FILES		+= utils/array_utils.c	# Utils for arrays
 
+SRC_FILES		+= tui_bonus/main.c	# 
+
 # Object files directory
 OBJ_DIR			:= obj/
 
@@ -77,6 +79,7 @@ all: $(TARGET) ## Build this project
 # Compilation rule for object files
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(MKDIR) $(@D)
+
 	$(call PRINT, $(CYAN), "build", "compiling", "$@", $(CYAN))
 	@$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
 
@@ -97,6 +100,10 @@ $(LIBFT_LIB):
 clean: ## Clean objects and dependencies
 	@$(RM) $(OBJ_FILES)
 	@$(RM) -r $(OBJ_DIR)
+
+run:
+	valgrind --suppressions=2048.supp --leak-check=full --show-leak-kinds=all ./2048
+
 	$(call PRINT, $(YELLOW), "clean", "Remove objects", $(YELLOW))
 	@$(RM) $(DEPENDS)
 	@$(RM) -r $(DEP_DIR)
@@ -114,7 +121,7 @@ help: ## Show help info
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "$(CYAN)%-30s$(RESET) %s\n", $$1, $$2}'
 
-.PHONY: all re clean fclean help
+.PHONY: all re clean fclean help run
 
 #### COLORS ####
 # Color codes
