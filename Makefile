@@ -4,11 +4,11 @@
 CC				:= cc
 
 # Compiler flags
-CFLAGS			:= -Wall -Werror -Wextra -pedantic -O3
+CFLAGS			:= -Wall -Werror -Wextra -D_XOPEN_SOURCE_EXTENDED -pedantic -O3
 
 # Libraries to be linked (if any)
 LIBS			+= -Llib/libft/ -lft
-LIBS			+= -lncurses
+LIBS			+= -lncursesw
 
 # Include directories
 INCLUDES		:= -Iinc/ -Ilib/libft/
@@ -21,14 +21,22 @@ SRC_DIR			:= src/
 
 # Source files
 ## SRC_FILES		+= main.c				# Main
+SRC_FILES		+= main.c				# Main
 SRC_FILES		+= game.c				# Game settings
 SRC_FILES		+= board/board.c		# Board related functions
 SRC_FILES		+= board/display.c		# Board related functions
 SRC_FILES		+= board/update.c		# Board related functions
 SRC_FILES		+= utils/array_utils.c	# Utils for arrays
+SRC_FILES		+= utils/game_utils.c	# Utils for game
+SRC_FILES		+= utils/destroy_game.c	# Free memory related functions
+SRC_FILES		+= utils/colors.c		# Initialize colors
+SRC_FILES		+= utils/titles.c		# Definition of titles
+SRC_FILES		+= utils/score.c		# Score related function
+SRC_FILES		+= windows/menu.c		# Menu window related functions
+SRC_FILES		+= windows/win_states.c 
+SRC_FILES		+= draw/draw_grid.c		# Draw game related functions
 
-SRC_FILES		+= tui_bonus/main.c	# Main
-SRC_FILES		+= tui_bonus/win_states.c
+
 # Object files directory
 OBJ_DIR			:= obj/
 
@@ -77,14 +85,14 @@ endif
 all: $(NAME) ## Build this project
 
 # Compilation rule for object files
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c inc/titles.h
 	@$(MKDIR) $(@D)
 
 	$(call PRINT, $(CYAN), "build", "compiling", "$@", $(CYAN))
 	@$(CC) $(CFLAGS) -MMD -MF $(patsubst %.o, %.d, $@) $(INCLUDES) -c $< -o $@
 
 # Rule for linking the target executable
-$(NAME): $(OBJ_FILES) $(LIBFT_LIB)
+$(NAME): $(OBJ_FILES) $(LIBFT_LIB) Makefile
 	$(call PRINT, $(GREEN), "build", "🔗 linking", "-- $(NAME)", $(GREEN))
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ_FILES) $(INCLUDES) $(LIBS)
 	$(call PRINT, $(GREEN), "info", "✨ Build finished!")
