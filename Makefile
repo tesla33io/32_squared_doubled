@@ -8,7 +8,7 @@ CFLAGS			:= -Wall -Werror -Wextra -D_XOPEN_SOURCE_EXTENDED -pedantic -O3
 
 # Libraries to be linked (if any)
 LIBS			+= -Llib/libft/ -lft
-LIBS			+= -lncursesw
+LIBS			+= -lncurses #w
 
 # Include directories
 INCLUDES		:= -Iinc/ -Ilib/libft/

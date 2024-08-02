@@ -110,12 +110,12 @@ void	displayBoardSelection(t_game *game, int y_margin, int maxWidth, int higligh
 	int x_start = getHalfWidth(maxWidth, GET_BOARD_WIDTH(4, 8) + GET_BOARD_WIDTH(5, 8) + margin);
 	if (x_start == 0)
 		x_start = 2;
-	display_game_board(game, y_margin + margin / 3, x_start, GRID_SIZE_4, 8);
+	display_mini_game_board(game, y_margin + margin / 3, x_start, GRID_SIZE_4, 8);
 	if (higlight == GRID_SIZE_4)
 		draw_border(game->main_w, y_margin + margin / 3, x_start , 8 * GRID_SIZE_4, COLOR_GREEN);
 	y_margin += (maxWidth < 80) ? (GET_BOARD_HEIGHT(4, 8) + margin) : 0;
 	x_start += (maxWidth < 80) ? 0 : GET_BOARD_WIDTH(5, 7);
-	display_game_board(game, y_margin, x_start, GRID_SIZE_5, 8);
+	display_mini_game_board(game, y_margin, x_start, GRID_SIZE_5, 8);
 	if (higlight == GRID_SIZE_5)
 		draw_border(game->main_w, y_margin, x_start, 8 * GRID_SIZE_5, COLOR_GREEN);
 	wattroff(game->main_w, A_REVERSE);

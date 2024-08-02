@@ -7,6 +7,7 @@ void	update_game_board(t_game *game)
 {
 	int	size = game->grid;
 	int	start_x, start_y, width, tmp_x;
+	int top_margin = 2;
 
 	wclear(game->main_w);
 	getmaxyx(game->main_w, game->y_max, game->x_max);
@@ -16,7 +17,8 @@ void	update_game_board(t_game *game)
 		wprintw(game->main_w, "Warning: terminal too small, please either resize your terminal or press ESCAPE to quit");
 		return ;
 	}
-	displayGameTitle(game->main_w, 0, game->x_max, 2);
+	start_y = top_margin;
+	displayGameTitle(game->main_w, TITLE_SMALL, game->x_max, start_y);
 	tmp_x = game->x_max;
 	if (tmp_x > 105)
 		tmp_x = 104;
@@ -26,8 +28,9 @@ void	update_game_board(t_game *game)
 	if ((width % 2) != 0)
 		width -= width % 2;
 	start_x = (game->x_max - 1) / 2 - ((width * size) / 2);
-	start_y = (game->y_max - 1) / 2 - ((width * size) / 4);
+	start_y = start_y + getArrSize(titles[TITLE_SMALL].titleText) + top_margin;
 	int score_offset = draw_score(game, start_y, start_x + (width * size));
+	start_y = start_y + score_offset + top_margin;
 	for (int row = 0; row < size; row++)
 	{
 		for (int col = 0; col < size; col++)
