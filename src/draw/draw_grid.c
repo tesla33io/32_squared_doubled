@@ -28,7 +28,18 @@ void	update_game_board(t_game *game)
 	start_x = (game->x_max - 1) / 2 - ((width * size) / 2);
 	start_y = (game->y_max - 1) / 2 - ((width * size) / 4);
 	int score_offset = draw_score(game, start_y, start_x + (width * size));
-	display_game_board(game, start_y + score_offset + 1, start_x, size, width);
+	for (int row = 0; row < size; row++)
+	{
+		for (int col = 0; col < size; col++)
+		{
+			draw_border(game->main_w, start_y + (row * width / 2), start_x + (col * width), width, CUSTOM_COLORS_START + 14);
+			draw_rectangle(game->main_w, start_y + (row * width / 2), start_x + (col * width), width, game->board[row][col]);
+			draw_value(game->main_w, 
+				start_y + (row * width / 2) + width / 4, 
+				start_x + col * width + (width / 2) - intlen(game->board[row][col]) / 2, 
+				game->board[row][col]);
+		}
+	}
 	wrefresh(game->main_w);
 }
 
@@ -43,14 +54,9 @@ unsigned int nextPowerOfTwo(unsigned int n) {
     return n + 1;
 }
 
-/**
- * @return int Height of the board
- */
-/* in progress */
-int	display_game_board(t_game* game, int start_y, int start_x, int size, int width)
+void	display_mini_game_board(t_game* game, int start_y, int start_x, int size, int width)
 {
-	int row = 0;
-	for (; row < size; row++)
+	for (int row = 0; row < size; row++)
 	{
 		for (int col = 0; col < size; col++)
 		{
@@ -65,8 +71,7 @@ int	display_game_board(t_game* game, int start_y, int start_x, int size, int wid
 				random);
 		}
 	}
-	return (row + width / 2);
-} // game->board[row][col]
+}
 
 void	draw_border(WINDOW *win, int row, int col, int width, int color)
 {
@@ -116,7 +121,7 @@ int	draw_score(t_game *game, int start_y, int start_x)
 	game->max_score = read_best_score();
 	output[0] = "SCORE: ";
 	output[1] = "BEST: ";
-	wattron(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
+	wattron(game->main_w, COLOR_PAIR(7) | A_BOLD ); //A_ITALIC
 	shift_left = intlen(game->score) + 5;
 	mvwprintw(game->main_w, start_y + y, start_x - shift_left, "%d", game->score);
 	mvwprintw(game->main_w, start_y + y, start_x - shift_left - (int)ft_strlen(output[y]), "%s", output[y]);
@@ -124,7 +129,7 @@ int	draw_score(t_game *game, int start_y, int start_x)
 	shift_left = intlen(game->max_score) + 5;
 	mvwprintw(game->main_w, start_y + y, start_x - shift_left, "%d", game->max_score);
 	mvwprintw(game->main_w, start_y + y, start_x - shift_left - (int)ft_strlen(output[y]), "%s", output[y]);
-	wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD | A_ITALIC);
+	wattroff(game->main_w, COLOR_PAIR(7) | A_BOLD); //A_ITALIC
 	return (y + 1);
 }
 

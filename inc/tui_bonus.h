@@ -73,10 +73,17 @@ void	game_loop(t_game *game);
 */
 int		moves(t_game *game, char dir);
 
-int	display_game_board(t_game* game, int start_y, int start_x, int size, int width);
+/** 
+ * @brief  			
+ * @param game 		A pointer to the t_game structure containing the game state and settings.
+ * @param start_y 	The starting y-coordinate position to print the game board.
+ * @param start_x 	The starting x-coordinate position to print the game board.
+ * @param size		The size of the the board
+ * @param width		A cell width on the board.
+*/
+void	display_mini_game_board(t_game* game, int start_y, int start_x, int size, int width);
 
 void	update_game_board(t_game *game);
-// void	draw_grid(t_game *game, int y, int x, int width);
 void	draw_rectangle(WINDOW *win, int row, int col, int width, int value);
 void	draw_border(WINDOW *win, int row, int col, int width, int color);
 void	draw_value(WINDOW *win, int row, int col, int value);

@@ -22,7 +22,6 @@ static int	win_init(t_game *game)
 {
 	initscr();
 	noecho();
-	keypad(stdscr, TRUE);
 	curs_set(0);
 	keypad(stdscr, TRUE);
 	mousemask(0, NULL);

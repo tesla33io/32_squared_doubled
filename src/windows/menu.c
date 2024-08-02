@@ -11,11 +11,11 @@ int	menu_init(t_game *game)
 	int ch = 0;
 	int higlight = 0;
 	int x_start = 0;
-	int margin = 0;
+	int top_margin = 0;
 
 	titel[0] = "W E L C O M E  T O  P U Z Z L E";
 	titel[1] = "R E A C H    ";
-	higlight = 4;
+	higlight = GRID_SIZE_4;
 	game->grid = 0;
 	if (is_power_two(WIN_VALUE) == 1)
 		game->win_value = WIN_VALUE;
@@ -24,24 +24,26 @@ int	menu_init(t_game *game)
 	int winer_state = (game->win_value == 0) ? 2048 : game->win_value;
 	while (1)
 	{
-		if (game->y_max <= 43 || game->x_max <= 80)
-			margin = 0;
+		if (game->y_max < 45 && game->x_max < 80)
+			top_margin = 3;
+		else if (game->y_max <= 43 || game->x_max <= 80)
+			top_margin = 0;
 		else
-			margin = 3;
-		int y_margin = margin;
+			top_margin = 3;
+		int y_margin = top_margin;
 		wclear(game->main_w);
 		wattron(game->main_w, A_BOLD);
 		getmaxyx(game->main_w, game->y_max, game->x_max);
-        displayGameTitle(game->main_w, TITLE_SMALL, game->x_max, y_margin);
+		displayGameTitle(game->main_w, TITLE_SMALL, game->x_max, y_margin);
 		y_margin += getArrSize(titles[TITLE_SMALL].titleText);
-		y_margin += margin;
+		y_margin += top_margin;
 		displayCenteredMsg(game->main_w, y_margin, game->x_max, titel[0]);
-		y_margin = y_margin + margin + 1;
+		y_margin = y_margin + top_margin + 1;
 		displayCenteredMsg(game->main_w, y_margin, game->x_max, titel[1]);
 		wattron(game->main_w, COLOR_PAIR(6) | A_BOLD | A_BLINK | A_DIM);
 		x_start = getHalfWidth(game->x_max, ft_strlen(titel[1]));
 		mvwprintw(game->main_w, y_margin, x_start + (int)ft_strlen(titel[1]), "%i", winer_state);
-		y_margin = y_margin + margin + 1;
+		y_margin = y_margin + top_margin + 1;
 		wattroff(game->main_w, COLOR_PAIR(6) | A_BOLD | A_BLINK | A_DIM);
 		displayBoardSelection(game, y_margin, game->x_max, higlight);
 		wattroff(game->main_w, A_BOLD);
@@ -108,14 +110,14 @@ void	displayBoardSelection(t_game *game, int y_margin, int maxWidth, int higligh
 	int x_start = getHalfWidth(maxWidth, GET_BOARD_WIDTH(4, 8) + GET_BOARD_WIDTH(5, 8) + margin);
 	if (x_start == 0)
 		x_start = 2;
-	display_game_board(game, y_margin + margin / 3, x_start, 4, 8);
+	display_game_board(game, y_margin + margin / 3, x_start, GRID_SIZE_4, 8);
 	if (higlight == GRID_SIZE_4)
-		draw_border(game->main_w, y_margin + margin / 3, x_start , 8 * 4, COLOR_GREEN);
+		draw_border(game->main_w, y_margin + margin / 3, x_start , 8 * GRID_SIZE_4, COLOR_GREEN);
 	y_margin += (maxWidth < 80) ? (GET_BOARD_HEIGHT(4, 8) + margin) : 0;
 	x_start += (maxWidth < 80) ? 0 : GET_BOARD_WIDTH(5, 7);
-	display_game_board(game, y_margin, x_start, 5, 8);
+	display_game_board(game, y_margin, x_start, GRID_SIZE_5, 8);
 	if (higlight == GRID_SIZE_5)
-		draw_border(game->main_w, y_margin, x_start, 8 * 5, COLOR_GREEN);
+		draw_border(game->main_w, y_margin, x_start, 8 * GRID_SIZE_5, COLOR_GREEN);
 	wattroff(game->main_w, A_REVERSE);
 }
 
